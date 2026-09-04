@@ -1,17 +1,16 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/v2/abha";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+console.log("API BASE URL:", API_BASE_URL);
 
 // =====================================================
 // Request OTP
 // =====================================================
 
-export const requestAbhaOtp = async (
-  aadhaar: string
-) => {
+export const requestAbhaOtp = async (aadhaar: string) => {
   const response = await axios.post(
-    `${API_BASE_URL}/request-otp`,
+    `${API_BASE_URL}/api/v2/abha/request-otp`,
     {
       aadhaar,
     }
@@ -19,7 +18,6 @@ export const requestAbhaOtp = async (
 
   return response.data;
 };
-
 
 // =====================================================
 // Verify OTP
@@ -31,7 +29,7 @@ export const verifyAbhaOtp = async (
   mobile: string
 ) => {
   const response = await axios.post(
-    `${API_BASE_URL}/verify-otp`,
+    `${API_BASE_URL}/api/v2/abha/verify-otp`,
     {
       txnId,
       otp,

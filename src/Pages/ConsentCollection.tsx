@@ -447,6 +447,7 @@ const ConsentCollection = ({ onNext }: ConsentCollectionProps) => {
 
             <Link
             to="/aadhaar-otp"
+              type="submit"
               className="flex items-center justify-center gap-2 px-7 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition"
             >
               Next

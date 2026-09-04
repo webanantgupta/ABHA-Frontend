@@ -103,9 +103,7 @@ const PersonalDetailes = () => {
 
   // Handle input/select changes
   const handleChange = (
-      e: React.ChangeEvent<
-    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
