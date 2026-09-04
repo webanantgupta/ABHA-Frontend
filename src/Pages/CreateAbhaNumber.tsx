@@ -8,7 +8,6 @@ import {
   FaEnvelope,
   FaPhone,
   FaIdCard,
-  FaLocationArrow,
   FaArrowRight,
 } from "react-icons/fa";
 
