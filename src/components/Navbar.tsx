@@ -38,9 +38,9 @@ const Navbar = () => {
       path: "/abha-login",
     },
     {
-      name: "Facility Login",
+      name: "Patient Login",
       icon: <FaHospital />,
-      path: "/facility-login",
+      path: "/patient-login",
     },
     {
       name: "ABHA Address",
