@@ -13,6 +13,8 @@ import AbhaProfilePage from "./Pages/AbhaProfilePage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
+import PaymentHistoryPags from "./Pages/PaymentHistoryPages";
+import PaymentHistoryPages from "./Pages/PaymentHistoryPages";
 
 // interface Phase1Data {
 //   aadhaarNumber: string;
@@ -35,6 +37,12 @@ function App() {
 <Route path="/patient-signup" element={<Signup/>}/>
 
 <Route path="/dashboard" element={<Dashboard/>}/>
+
+<Route
+    path="/payment-history"
+    element={<PaymentHistoryPages />}
+/>
+
         <Route
           path="/create-abha"
           element={

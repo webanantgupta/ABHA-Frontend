@@ -1,94 +1,179 @@
-import axios from "axios";
 import { useState } from "react";
+import {
+  FaCreditCard,
+  FaSpinner,
+  FaRupeeSign,
+} from "react-icons/fa";
 
-interface PaymentResponse {
-    paymentUrl?: string;
-    merchantOrderId?: string;
-    message?: string;
-}
+import { createPayment } from "../services/paymentApi";
 
-const PayButton = () => {
-    const [amount, setAmount] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
+const PaymentButton = () => {
+  const [amount, setAmount] = useState("");
 
-    const handlePayment = async (): Promise<void> => {
-        if (!amount || Number(amount) <= 0) {
-            alert("Please enter a valid amount");
-            return;
-        }
+  const [loading, setLoading] = useState(false);
 
-        try {
-            setLoading(true);
+  const [error, setError] = useState("");
 
-            const response = await axios.post<PaymentResponse>(
-                "http://localhost:8080/api/v1/payment/create",
-                {
-                    amount: Number(amount),
-                }
-            );
+  const handlePayment = async () => {
+    try {
+      setError("");
 
-            console.log("Payment response:", response.data);
+      // ================================
+      // VALIDATE AMOUNT
+      // ================================
 
-            if (response.data.paymentUrl) {
-                window.location.href = response.data.paymentUrl;
-            } else {
-                alert("PhonePe payment URL not received");
-            }
-        } catch (error: unknown) {
-            console.error("Payment error:", error);
+      const numericAmount = Number(amount);
 
-            if (axios.isAxiosError(error)) {
-                console.error(
-                    "Server response:",
-                    error.response?.data
-                );
+      if (!amount.trim()) {
+        setError("Please enter an amount.");
+        return;
+      }
 
-                alert(
-                    error.response?.data?.message ||
-                    "Payment failed"
-                );
-            } else {
-                alert("Payment failed");
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (numericAmount <= 0) {
+        setError("Please enter a valid amount.");
+        return;
+      }
 
-    return (
-        <div className="flex w-full justify-center">
-            <div className="w-full max-w-2xl rounded-lg p-4">
+      // ================================
+      // CREATE PAYMENT
+      // ================================
+
+      setLoading(true);
+
+      const data = await createPayment(numericAmount);
+
+      console.log("Payment Response:", data);
+
+      // ================================
+      // REDIRECT TO PHONEPE
+      // ================================
+
+      if (data.success && data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+        return;
+      }
+
+      setError("Payment URL was not received.");
+
+    } catch (error: any) {
+      console.error("PAYMENT ERROR:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Failed to create payment."
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="p-5">
+
+      {/* ================================
+          Amount Input
+      ================================= */}
+
+      <label className="mb-2 block text-sm font-semibold text-gray-700">
+        Enter Amount
+      </label>
+
+      <div className="relative">
+
+        <FaRupeeSign
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+
+        <input
+          type="number"
+          min="1"
+          step="0.01"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          disabled={loading}
+          className="
+            w-full
+            rounded-lg
+            border
+            border-gray-300
+            bg-white
+            py-3
+            pl-10
+            pr-4
+            text-gray-900
+            outline-none
+            transition
+            focus:border-blue-500
+            focus:ring-2
+            focus:ring-blue-100
+            disabled:cursor-not-allowed
+            disabled:bg-gray-100
+          "
+        />
+
+      </div>
 
 
-                {/* Input + Button */}
-                <div className="flex flex-col gap-3 sm:flex-row">
+      {/* ================================
+          Pay Button
+      ================================= */}
 
-                    <input
-                        type="number"
-                        min="1"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        placeholder="Enter amount"
-                        disabled={loading}
-                        className="flex-1 rounded-md border border-gray-300 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                    />
+      <button
+        type="button"
+        onClick={handlePayment}
+        disabled={loading}
+        className="
+          mt-4
+          flex
+          w-full
+          items-center
+          justify-center
+          gap-2
+          rounded-lg
+          bg-[#D9742B]
+          px-6
+          py-3
+          font-semibold
+          text-white
+          transition
+          hover:bg-[#c76620]
+          disabled:cursor-not-allowed
+          disabled:opacity-60
+        "
+      >
 
-                    <button
-                        onClick={handlePayment}
-                        disabled={loading}
-                        className="rounded-md bg-blue-500 px-8 py-3 font-bold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-400"
-                    >
-                        {loading
-                            ? "Opening PhonePe..."
-                            : amount
-                            ? `Pay ₹${amount}`
-                            : "Pay"}
-                    </button>
+        {loading ? (
+          <>
+            <FaSpinner className="animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <FaCreditCard />
 
-                </div>
-            </div>
-        </div>
-    );
+            {amount
+              ? `Pay ₹${amount}`
+              : "Pay Now"}
+          </>
+        )}
+
+      </button>
+
+
+      {/* ================================
+          Error
+      ================================= */}
+
+      {error && (
+        <p className="mt-3 text-sm text-red-600">
+          {error}
+        </p>
+      )}
+
+    </div>
+  );
 };
 
-export default PayButton;
+export default PaymentButton;
