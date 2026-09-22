@@ -18,15 +18,28 @@ const getToken = () => {
 // AUTH HEADERS
 // =====================================
 
+// const getAuthHeaders = () => {
+
+//     const token = getToken();
+
+//     return {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//     };
+// };
+
 const getAuthHeaders = () => {
 
     const token = getToken();
+
+    console.log("JWT TOKEN:", token);
 
     return {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
     };
 };
+
 
 
 // =====================================
