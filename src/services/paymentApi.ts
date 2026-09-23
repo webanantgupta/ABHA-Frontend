@@ -1,8 +1,13 @@
 import axios from "axios";
 
+
+// =====================================
+// API BASE URL
+// =====================================
+
 const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ||
-    "http://localhost:8080";
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8080";
 
 
 // =====================================
@@ -10,7 +15,16 @@ const API_BASE_URL =
 // =====================================
 
 const getToken = () => {
-    return localStorage.getItem("token");
+
+  const token =
+    localStorage.getItem("token");
+
+  console.log(
+    "PAYMENT JWT:",
+    token
+  );
+
+  return token;
 };
 
 
@@ -18,28 +32,31 @@ const getToken = () => {
 // AUTH HEADERS
 // =====================================
 
-// const getAuthHeaders = () => {
-
-//     const token = getToken();
-
-//     return {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//     };
-// };
-
 const getAuthHeaders = () => {
 
-    const token = getToken();
+  const token = getToken();
 
-    console.log("JWT TOKEN:", token);
 
-    return {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-    };
+  if (!token) {
+
+    throw new Error(
+      "JWT token not found. Please login again."
+    );
+
+  }
+
+
+  return {
+
+    Authorization:
+      `Bearer ${token}`,
+
+    "Content-Type":
+      "application/json",
+
+  };
+
 };
-
 
 
 // =====================================
@@ -47,24 +64,40 @@ const getAuthHeaders = () => {
 // =====================================
 
 export const createPayment = async (
-    amount: number
+  amount: number
 ) => {
 
-    const response = await axios.post(
+  console.log(
+    "Creating payment for:",
+    amount
+  );
 
-        `${API_BASE_URL}/api/v1/payment/create`,
 
-        {
-            amount,
-        },
+  const response =
+    await axios.post(
 
-        {
-            headers: getAuthHeaders(),
-        }
+      `${API_BASE_URL}/api/v1/payment/create`,
+
+      {
+        amount,
+      },
+
+      {
+        headers:
+          getAuthHeaders(),
+      }
 
     );
 
-    return response.data;
+
+  console.log(
+    "PAYMENT API RESPONSE:",
+    response.data
+  );
+
+
+  return response.data;
+
 };
 
 
@@ -72,39 +105,49 @@ export const createPayment = async (
 // CHECK PAYMENT STATUS
 // =====================================
 
-export const checkPaymentStatus = async (
+export const checkPaymentStatus =
+  async (
     merchantOrderId: string
-) => {
+  ) => {
 
-    const response = await axios.get(
+    const response =
+      await axios.get(
 
         `${API_BASE_URL}/api/v1/payment/status/${merchantOrderId}`,
 
         {
-            headers: getAuthHeaders(),
+          headers:
+            getAuthHeaders(),
         }
 
-    );
+      );
+
 
     return response.data;
-};
+
+  };
 
 
 // =====================================
-// GET PAYMENT HISTORY
+// PAYMENT HISTORY
 // =====================================
 
-export const getPaymentHistory = async () => {
+export const getPaymentHistory =
+  async () => {
 
-    const response = await axios.get(
+    const response =
+      await axios.get(
 
         `${API_BASE_URL}/api/v1/payment/history`,
 
         {
-            headers: getAuthHeaders(),
+          headers:
+            getAuthHeaders(),
         }
 
-    );
+      );
+
 
     return response.data;
-};
+
+  };

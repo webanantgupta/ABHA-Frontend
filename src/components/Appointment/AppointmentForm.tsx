@@ -316,17 +316,15 @@ const AppointmentForm = ({
         Dr Ashay Rathore
       </option>
 
-      <option value="Dr Anirudh Tiwari">
-        Dr Anirudh Tiwari
+      <option value="Dr Sunil Mishra">
+        Dr Sunil Mishra
       </option>
 
-      <option value="Dr Rahul Sharma">
-        Dr Rahul Sharma
+      <option value="Dr Surbhi Tiwari">
+        Dr Surbhi Tiwari
       </option>
 
-      <option value="Dr Priya Singh">
-        Dr Priya Singh
-      </option>
+     
     </select>
   </div>
 </div>

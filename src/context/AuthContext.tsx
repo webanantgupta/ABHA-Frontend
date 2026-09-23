@@ -6,11 +6,22 @@ import {
 } from "react";
 
 import type { User } from "../types/auth";
-import { loginUser, signupUser } from "../services/authApi";
+import {
+  loginUser,
+  signupUser,
+} from "../services/authApi";
+
+
+// =====================================
+// CONTEXT TYPE
+// =====================================
 
 interface AuthContextType {
+
   user: User | null;
+
   token: string | null;
+
   loading: boolean;
 
   login: (
@@ -27,117 +38,281 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<
-  AuthContextType | undefined
->(undefined);
+
+// =====================================
+// CREATE CONTEXT
+// =====================================
+
+const AuthContext =
+  createContext<AuthContextType | undefined>(
+    undefined
+  );
+
+
+// =====================================
+// PROVIDER PROPS
+// =====================================
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+
+// =====================================
+// AUTH PROVIDER
+// =====================================
+
 export const AuthProvider = ({
   children,
 }: AuthProviderProps) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
 
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
+  const [token, setToken] =
+    useState<string | null>(
+      localStorage.getItem("token")
+    );
 
-    if (!storedUser) {
-      return null;
-    }
 
-    try {
-      return JSON.parse(storedUser);
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] =
+    useState<User | null>(() => {
 
-  const [loading, setLoading] = useState(false);
+      const storedUser =
+        localStorage.getItem("user");
 
+      if (!storedUser) {
+        return null;
+      }
+
+      try {
+
+        return JSON.parse(storedUser);
+
+      } catch {
+
+        return null;
+
+      }
+
+    });
+
+
+  const [loading, setLoading] =
+    useState(false);
+
+
+  // =====================================
   // LOGIN
+  // =====================================
+
   const login = async (
     email: string,
     password: string
   ) => {
+
     try {
+
       setLoading(true);
 
-      const response = await loginUser({
-        email,
-        password,
-      });
+
+      const response =
+        await loginUser({
+          email,
+          password,
+        });
+
+
+      console.log(
+        "AUTH LOGIN RESPONSE:",
+        response
+      );
+
 
       if (!response.success) {
-        throw new Error(response.message);
+
+        throw new Error(
+          response.message
+        );
+
       }
+
+
+      // =================================
+      // CHECK JWT
+      // =================================
+
+      if (!response.token) {
+
+        throw new Error(
+          "Login successful but JWT token was not received."
+        );
+
+      }
+
+
+      // =================================
+      // SAVE JWT
+      // =================================
 
       localStorage.setItem(
         "token",
         response.token
       );
 
+
+      // =================================
+      // SAVE USER
+      // =================================
+
       localStorage.setItem(
         "user",
         JSON.stringify(response.user)
       );
 
+
+      // =================================
+      // UPDATE STATE
+      // =================================
+
       setToken(response.token);
+
       setUser(response.user);
+
+
+      console.log(
+        "JWT SAVED:",
+        !!localStorage.getItem("token")
+      );
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
+
+  // =====================================
   // SIGNUP
+  // =====================================
+
   const signup = async (
     name: string,
     email: string,
     password: string
   ) => {
+
     try {
+
       setLoading(true);
 
-      const response = await signupUser({
-        name,
-        email,
-        password,
-      });
+
+      const response =
+        await signupUser({
+          name,
+          email,
+          password,
+        });
+
+
+      console.log(
+        "AUTH SIGNUP RESPONSE:",
+        response
+      );
+
 
       if (!response.success) {
-        throw new Error(response.message);
+
+        throw new Error(
+          response.message
+        );
+
       }
+
+
+      // =================================
+      // CHECK JWT
+      // =================================
+
+      if (!response.token) {
+
+        throw new Error(
+          "Signup successful but JWT token was not received."
+        );
+
+      }
+
+
+      // =================================
+      // SAVE JWT
+      // =================================
 
       localStorage.setItem(
         "token",
         response.token
       );
 
+
+      // =================================
+      // SAVE USER
+      // =================================
+
       localStorage.setItem(
         "user",
         JSON.stringify(response.user)
       );
 
+
+      // =================================
+      // UPDATE STATE
+      // =================================
+
       setToken(response.token);
+
       setUser(response.user);
+
+
+      console.log(
+        "JWT SAVED:",
+        !!localStorage.getItem("token")
+      );
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
+
+  // =====================================
   // LOGOUT
+  // =====================================
+
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "user"
+    );
+
 
     setToken(null);
+
     setUser(null);
+
   };
 
+
+  // =====================================
+  // PROVIDER
+  // =====================================
+
   return (
+
     <AuthContext.Provider
       value={{
         user,
@@ -148,19 +323,35 @@ export const AuthProvider = ({
         logout,
       }}
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 };
 
+
+// =====================================
+// useAuth HOOK
+// =====================================
+
 export const useAuth = () => {
-  const context = useContext(AuthContext);
+
+  const context =
+    useContext(AuthContext);
+
 
   if (!context) {
+
     throw new Error(
       "useAuth must be used inside AuthProvider"
     );
+
   }
 
+
   return context;
+
 };
