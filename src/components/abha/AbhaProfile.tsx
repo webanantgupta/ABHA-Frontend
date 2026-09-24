@@ -970,28 +970,7 @@ const AbhaProfile = ({
   // CALCULATE TOTAL APPOINTMENT AMOUNT
   // =====================================================
 
-  const totalAmount =
-    appointment?.fees?.reduce(
-      (total, fee) => {
-
-        // IMPORTANT:
-        // Your AppointmentForm uses "selected"
-        // NOT "applicable"
-
-        if (fee.selected) {
-
-          return (
-            total +
-            Number(fee.amount || 0)
-          );
-
-        }
-
-        return total;
-
-      },
-      0
-    ) || 0;
+const totalAmount = appointment?.fees ?.filter((fee) => fee.selected) .reduce( (total, fee) => total + fee.amount, 0 ) || 0;
 
   // =====================================================
   // DEBUG

@@ -7,7 +7,6 @@ interface AppointmentDetailsProps {
 const AppointmentDetails = ({
   appointment,
 }: AppointmentDetailsProps) => {
-
   // =====================================================
   // Calculate Total
   // =====================================================
@@ -54,7 +53,7 @@ const AppointmentDetails = ({
 
             <InfoItem
               label="Patient Name"
-              value={appointment.patientName}
+              value={appointment.patient_name}
             />
 
             <InfoItem
@@ -95,17 +94,17 @@ const AppointmentDetails = ({
 
             <InfoItem
               label="Doctor"
-              value={appointment.doctor}
+              value={appointment.doctor_name}
             />
 
             <InfoItem
               label="Appointment Date"
-              value={appointment.appointmentDate}
+              value={appointment.appointment_date}
             />
 
             <InfoItem
               label="Time Slot"
-              value={appointment.timeSlot}
+              value={appointment.time_slot}
             />
 
             <InfoItem
@@ -115,7 +114,7 @@ const AppointmentDetails = ({
 
             <InfoItem
               label="Authorized By"
-              value={appointment.authorizedBy}
+              value={appointment.authorized_by}
             />
 
           </div>
@@ -163,6 +162,7 @@ const AppointmentDetails = ({
             {/* Discount */}
 
             <div className="flex justify-between border-t border-gray-200 px-4 py-3">
+
               <span className="text-sm text-gray-600">
                 Discount
               </span>
@@ -170,6 +170,7 @@ const AppointmentDetails = ({
               <span className="text-sm font-semibold text-green-600">
                 - ₹{appointment.discount}
               </span>
+
             </div>
 
 
@@ -192,6 +193,7 @@ const AppointmentDetails = ({
         </div>
 
       </div>
+
     </section>
   );
 };
@@ -203,7 +205,7 @@ const AppointmentDetails = ({
 
 interface InfoItemProps {
   label: string;
-  value: string;
+  value: string | null | undefined;
 }
 
 const InfoItem = ({
