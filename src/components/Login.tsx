@@ -12,7 +12,7 @@ import { useAuth } from "../context/AuthContext";
 const Login = () => { 
   const navigate = useNavigate(); 
  
-  const { login, loading } = useAuth(); 
+const { login, loading, user } = useAuth();
  
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState(""); 
@@ -33,14 +33,15 @@ const Login = () => {
  
     try { 
       // Calls the AuthContext login function
-      const user = await login(email, password); 
-alert("Login successfull")
-      // Optional: Role-based navigation based on backend response
-      if (user?.role === "patient") {
-        navigate("/dashboard"); 
-      } else {
-        navigate("/dashboard"); 
-      }
+await login(email, password);
+
+alert("Login successful");
+
+if (user?.role === "patient") {
+  navigate("/dashboard");
+} else {
+  navigate("/dashboard");
+}
     } catch (err: any) { 
       // Extracts backend error response or falls back to generic message
       const errorMessage = 

@@ -123,43 +123,48 @@ const AppointmentForm = ({
       }
 
       // Convert backend response to frontend Appointment type
-      const createdAppointment: Appointment = {
-        patientName: result.patient_name,
-        mrn: result.mrn,
-        age: Number(result.age),
-        gender: result.gender,
-        phone: result.phone,
+    const createdAppointment: Appointment = {
+  appointment_id: Number(result.appointment_id),
 
-        doctor: result.doctor_name,
+  patient_name: result.patient_name,
+  mrn: result.mrn,
+  age: Number(result.age),
+  gender: result.gender,
+  phone: result.phone,
 
-        appointmentDate: result.appointment_date,
+  doctor_name: result.doctor_name,
 
-        timeSlot: formatTime(result.time_slot),
+  appointment_date: result.appointment_date,
 
-        fees: [
-          {
-            name: "OPD Follow Up Fee",
-            amount: 0,
-            selected: false,
-          },
-          {
-            name: "Appointment Fee",
-            amount: 0,
-            selected: false,
-          },
-          {
-            name: "Doctor Consultation Fee",
-            amount: 600,
-            selected: true,
-          },
-        ],
+  time_slot: formatTime(result.time_slot),
 
-        discount: Number(result.discount || 0),
+  fees: [
+    {
+      name: "OPD Follow Up Fee",
+      amount: 0,
+      selected: false,
+    },
+    {
+      name: "Appointment Fee",
+      amount: 0,
+      selected: false,
+    },
+    {
+      name: "Doctor Consultation Fee",
+      amount: 600,
+      selected: true,
+    },
+  ],
 
-        authorizedBy: result.authorized_by,
+  discount: Number(result.discount || 0),
 
-        priority: result.priority,
-      };
+  authorized_by: result.authorized_by,
+
+  priority: result.priority,
+
+  created_at: result.created_at,
+  updated_at: result.updated_at,
+};
 
       console.log(
         "Final appointment object:",
