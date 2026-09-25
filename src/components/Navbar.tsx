@@ -2,7 +2,7 @@ import {
   FaChevronDown,
   FaUserCircle,
   FaHospital,
-  FaAddressCard,
+  // FaAddressCard,
   FaHistory,
   FaSignOutAlt,
 } from "react-icons/fa";
